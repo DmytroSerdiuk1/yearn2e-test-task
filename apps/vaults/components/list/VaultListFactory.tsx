@@ -135,7 +135,6 @@ function	VaultListFactory(): ReactElement {
 					[
 						{value: 'Curve Factory Vaults', label: 'Curve', isSelected: category === 'Curve Factory Vaults'},
 						{value: 'Holdings', label: 'Holdings', isSelected: category === 'Holdings'}
-
 					]
 				]}
 				onSelect={set_category}

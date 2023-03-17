@@ -1,12 +1,99 @@
 import React, {useRef} from 'react';
 import Balancer from 'react-wrap-balancer';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
+import {Button} from '@yearn-finance/web-lib/components/Button';
 import {useClientEffect} from '@yearn-finance/web-lib/hooks/useClientEffect';
 import {YCRV_TOKEN_ADDRESS} from '@yearn-finance/web-lib/utils/constants';
+import DashboardCard from '@common/components/DashboadCard';
 import LogoYearn from '@common/icons/LogoYearn';
+import {AreaChartData, AreaChartItemData,
+	AreaRadarChartData,
+	BarChartData,
+	ColumnLineData,
+	RadialBarChartData, RadialBarChartItemData,
+	stateData,
+	usData} from '@common/mock/MockData';
 
+import type {LoaderComponent} from 'next/dynamic';
 import type {ReactElement} from 'react';
+import type {TAreaChart} from '@common/components/AreaChart';
+import type {TAreaRadarChart} from '@common/components/AreaRadarChart';
+import type {TBarChart} from '@common/components/BarChart';
+import type {TColumnAndLineChart} from '@common/components/ColumnAndLineChart';
+import type {TPyramidAndMap} from '@common/components/PyramidAndMap';
+import type {TRadialChart} from '@common/components/RadialBarChart';
+
+const RadialBarChart = dynamic<TRadialChart>(async (): LoaderComponent<TRadialChart> => import('@common/components/RadialBarChart'), {ssr: false});
+const BarChart = dynamic<TBarChart>(async (): LoaderComponent<TBarChart> => import('@common/components/BarChart'), {ssr: false});
+const AreaChart = dynamic<TAreaChart>(async (): LoaderComponent<TAreaChart> => import('@common/components/AreaChart'), {ssr: false});
+const ColumnAndLineChart = dynamic<TColumnAndLineChart>(async (): LoaderComponent<TColumnAndLineChart> => import('@common/components/ColumnAndLineChart'), {ssr: false});
+const PyramidAndMap = dynamic<TPyramidAndMap>(async (): LoaderComponent<TPyramidAndMap> => import('@common/components/PyramidAndMap'), {ssr: false});
+const AreaRadarChart = dynamic<TAreaRadarChart>(async (): LoaderComponent<TAreaRadarChart> => import('@common/components/AreaRadarChart'), {ssr: false});
+
+const financePerformance = [
+	{
+		label: 'Total Value Locked',
+		value: 300000,
+		percentage: 5,
+		fallen: true,
+		icon: <LogoYearn
+			className={'h-[30px] w-[30px]'}
+			back={'text-neutral-900'}
+			front={'text-neutral-0'} />
+	},
+	{
+		label: 'Total Locked',
+		value: 3030000,
+		percentage: 4,
+		fallen: false,
+		icon: <LogoYearn
+			className={'h-[30px] w-[30px]'}
+			back={'text-neutral-900'}
+			front={'text-neutral-0'} />
+	},
+	{
+		label: 'Total Value Locked',
+		value: 300000,
+		percentage: 2,
+		fallen: false,
+		icon: <LogoYearn
+			className={'h-[30px] w-[30px]'}
+			back={'text-neutral-900'}
+			front={'text-neutral-0'} />
+	},
+	{
+		label: 'Total Value Locked',
+		value: 300000,
+		percentage: 1,
+		fallen: false,
+		icon: <LogoYearn
+			className={'h-[30px] w-[30px]'}
+			back={'text-neutral-900'}
+			front={'text-neutral-0'} />
+	},
+	{
+		label: 'Total Value Locked',
+		value: 33300000,
+		percentage: 3,
+		fallen: false,
+		icon: <LogoYearn
+			className={'h-[30px] w-[30px]'}
+			back={'text-neutral-900'}
+			front={'text-neutral-0'} />
+	},
+	{
+		label: 'Total Value Locked',
+		value: 30044000,
+		percentage: 2.2,
+		fallen: false,
+		icon: <LogoYearn
+			className={'h-[30px] w-[30px]'}
+			back={'text-neutral-900'}
+			front={'text-neutral-0'} />
+	}
+];
 
 const	apps = [
 	{
@@ -187,6 +274,7 @@ function	TextAnimation(): ReactElement {
 }
 
 function	Index(): ReactElement {
+
 	return (
 		<>
 			<div className={'mx-auto mt-6 mb-10 flex flex-col justify-center md:mt-20 md:mb-14'}>
@@ -210,6 +298,56 @@ function	Index(): ReactElement {
 			<section className={'grid grid-cols-1 gap-10 md:grid-cols-3 lg:grid-cols-4'}>
 				{apps.map((app): ReactElement => <AppBox key={app.href} app={app} />)}
 			</section>
+
+			<div className={'mt-10 pb-5'}>
+				{'Finance Performance'}
+			</div>
+			<div className={'mb-16 flex justify-between gap-2.5 overflow-x-auto pb-3 sm:flex-wrap lg:flex-nowrap'}>
+				{financePerformance.map((item): JSX.Element => {
+					return (<DashboardCard
+						key={item.label}
+						fallen={item.fallen}
+						icon={item.icon}
+						changePercentage={item.percentage}
+						value={item.value}
+						label={item.label}
+					/>);
+				})}
+			</div>
+			<div className={'mb-3.5 flex flex-wrap gap-3.5 lg:flex-nowrap'}>
+				<div className={'w-full lg:w-5/12'}>
+					<RadialBarChart itemData={RadialBarChartItemData} data={RadialBarChartData}/>
+				</div>
+				<div className={'flex w-full flex-col gap-3.5'}>
+					<BarChart data={BarChartData}/>
+					<AreaChart items={AreaChartItemData} data={AreaChartData()}/>
+				</div>
+			</div>
+			<div className={'flex flex-wrap gap-3.5 lg:flex-nowrap'}>
+				<div className={'w-full xl:w-5/12'}>
+					<div className={'flex h-full flex-col justify-center rounded-md border border-white/10 p-3.5'}>
+						<div className={'text-center text-2xl'}>
+							<div>{'Try out our'}</div>
+							{'new'}<span className={'font-bold'}>{' Invoice Manager'}</span>
+						</div>
+						<div className={'mt-4 flex justify-center gap-2'}>
+							<Button>{'Try Now'}</Button>
+							<Button variant={'outlined'}>{'Learn More'}</Button>
+						</div>
+					</div>
+				</div>
+				<div className={'flex w-full flex-col gap-3.5'}>
+					<ColumnAndLineChart data={ColumnLineData}/>
+				</div>
+			</div>
+			<div className={'mt-3.5 flex flex-wrap gap-3.5 lg:flex-nowrap'}>
+				<div className={'w-full xl:w-5/12'}>
+					<AreaRadarChart data={AreaRadarChartData}/>
+				</div>
+				<div className={'flex w-full flex-col gap-3.5'}>
+					<PyramidAndMap usData={usData} stateData={stateData}/>
+				</div>
+			</div>
 		</>
 	);
 }
